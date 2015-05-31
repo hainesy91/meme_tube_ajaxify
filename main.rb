@@ -74,7 +74,7 @@ end
 #######
 # method to pass the sql statements into sql
 def run_sql(sql)
-  conn = PG.connect(dbname: "memetube", host: "localhost")
+  conn = PG.connect(dbname: "memetubeajax", host: "localhost")
   begin
     result = conn.exec(sql)
   ensure

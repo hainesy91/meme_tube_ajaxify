@@ -11,7 +11,11 @@ end
 # index method (show all videos)
 get "/videos" do
   @videos = run_sql("SELECT * FROM videos ORDER BY artist")
-  erb :index
+  if request.xhr?
+    json @videos.to_a
+  else
+    erb :index
+  end
 end
 
 # new method (create step 1/2)
@@ -30,8 +34,12 @@ post "/videos" do
   # views = 0
 
   sql = "INSERT INTO videos (artist, title, description, category, genre, url, views) VALUES (#{sql_string(artist)}, #{sql_string(title)}, #{sql_string(description)}, '#{category}','#{genre}', '#{url}', 0);"
-  run_sql(sql)
-  redirect to("/videos")
+  @videos = run_sql(sql).first
+  if request.xhr?
+    json @video
+  else
+    redirect to("/videos")
+  end
 end
 
 # show method (show one video)
@@ -40,7 +48,11 @@ get "/videos/:id" do
   run_sql(sql)
   sql = "SELECT * FROM videos WHERE id=#{params[:id]}"
   @video = run_sql(sql).first
-  erb :show
+  if request.xhr?
+    json @video
+  else
+    erb :show
+  end
 end
 
 # edit method (step 1/2)

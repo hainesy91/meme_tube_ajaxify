@@ -73,14 +73,22 @@ post "/videos/:id" do
 
   sql = "UPDATE videos SET artist=#{sql_string(artist)}, title=#{sql_string(title)}, description=#{sql_string(description)}, url='#{url}', category='#{category}', genre='#{genre}' WHERE id='#{params[:id]}';"
   run_sql(sql)
-  redirect to("/videos")
+  if request.xhr?
+    json [{status: :ok}]
+  else
+    redirect to("/videos")
+  end
 end
 
 # delete method
 get "/videos/:id/delete" do
   sql = "DELETE FROM videos where id=#{params[:id]}"
   run_sql(sql)
-  redirect to("/videos")
+  if request.xhr?
+    json [{status: :ok}]
+  else
+    redirect to("/videos")
+  end
 end
 
 #######
